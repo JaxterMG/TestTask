@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">TestTask</string>
+    <string name="URL">https://api.dellin.ru/static/catalog/terminals_v3.json</string>
+</resources>
