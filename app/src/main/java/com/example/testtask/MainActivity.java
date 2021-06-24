@@ -28,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         DownloadJson();
         setContentView(R.layout.activity_main);
     }
+
+   
+
     void DownloadJson()
     {
         String url = getString(R.string.URL);
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         request.setTitle(title);
         request.setDescription("Downloading file");
         request.addRequestHeader("cookie", url);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title);
 
         DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
