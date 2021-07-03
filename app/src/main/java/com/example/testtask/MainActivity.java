@@ -2,16 +2,17 @@ package com.example.testtask;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.JsonReader;
 import android.webkit.URLUtil;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,22 +20,23 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Scanner;
+
 
 public class MainActivity extends AppCompatActivity {
 
     String title;
     TextView tv;
-
+    Database db = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Database db = new Database( MainActivity.this);
+
 
         DownloadFile downloadFile = new DownloadFile();
         downloadFile.execute();
@@ -46,14 +48,17 @@ public class MainActivity extends AppCompatActivity {
 
     BroadcastReceiver onComplete=new BroadcastReceiver() {
         public void onReceive(Context ctxt, Intent intent) {
+
+
             Toast.makeText(MainActivity.this, "Downloaded", Toast.LENGTH_SHORT).show();
           ParseTextFile parse = new ParseTextFile();
+
           parse.execute(title);
         }
     };
 
 
-    private  class DownloadFile extends AsyncTask<Void,Void,Void>
+    private class DownloadFile extends AsyncTask<Void,Void,Void>
     {
 
         @Override
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
             DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
             downloadManager.enqueue(request);
+
             //Toast.makeText(MainActivity.this, "DownloadingStarted", Toast.LENGTH_SHORT).show();
             registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
@@ -76,60 +82,97 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    private class ParseTextFile extends  AsyncTask<String, Void, String>
+    private  class ParseTextFile extends  AsyncTask<String, Void, String>
     {
 
         @Override
         protected String doInBackground(String... strings) {
-           /* int i = 0;
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),strings[0]);
-            try {
-                InputStream is = new FileInputStream(file);
-                Scanner sc = new Scanner(is);
-                //Reading line by line from scanner to StringBuffer
-                StringBuffer sb = new StringBuffer();
-                while(sc.hasNext()){
-                    i++;
-                    sb.append(sc.nextLine());
-                    System.out.println(i+" " +sc.nextLine());
-                }
 
-                // ConvertToJson(sb.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            file.delete();
-            return null;
-
-            */
             String jsontext = null;
             byte[] buffer = null;
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),strings[0]);
             try {
                 InputStream is = new FileInputStream(file);
-                buffer = new byte[is.available()];
-            while (is.read(buffer) != -1);
+                int size = is.available();
+                buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                jsontext = new String(buffer, "UTF-8");
 
-
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            jsontext = new String(buffer);
-            //System.out.println(jsontext);
-            file.delete();
 
             JSONObject jsonObject = null;
             try {
                 jsonObject = new JSONObject(jsontext);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            //db = new Database(MainActivity.this);
             try {
-                JSONArray cities = jsonObject.getJSONArray("city");
-                System.out.println(cities.get(1));
-                //tv.setText(name);
-            } catch (JSONException e) {
+
+                JSONArray cities = null;
+
+            //cities = jsonObject.getJSONArray("city");
+
+
+
+               // for (int i = 0; i<cities.length();i++)
+                //{
+                    String city = null;
+                    String name = null;
+                    double latitude = 0;
+                    double longitude = 0;
+                    boolean recieveCargo = false;
+                    boolean giveoutCargo = false;
+                    boolean defaultT = false;
+                    String worktable = null;
+                    String maps_url = null;
+
+
+/*
+                    JSONObject object = cities.getJSONObject(i);
+                    String cityName= object.getString("name");
+                    JSONObject terminals = object.getJSONObject("terminals");
+                    JSONArray terminal = terminals.getJSONArray("terminal");
+
+                    for (int j = 0;j<terminals.length(); j++)
+                    {
+                        JSONObject term = terminal.getJSONObject(j);
+                        name = term.getString("name");
+                        latitude = term.getDouble("latitude");
+                        longitude = term.getDouble("longitude");
+                        recieveCargo = term.getBoolean("receiveCargo");
+                        giveoutCargo = term.getBoolean("giveoutCargo");
+                        defaultT = term.getBoolean("default");
+                        //worktable = term.getString("worktable");
+                        // maps_url = term.getString("maps");
+                       //db.InsertTerminal("cityName",name,latitude,longitude,recieveCargo,
+                         //       giveoutCargo,defaultT,"worktable","efefef");
+
+                    }
+
+ */
+
+
+
+                    db.InsertTerminal("cityName","name",234234,23423,true,
+                            false,true,"worktable","efefef");
+
+
+
+
+                   // registerReceiver(onComplete, new IntentFilter());
+
+                  //  System.out.println(cityName);
+               // }
+
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
