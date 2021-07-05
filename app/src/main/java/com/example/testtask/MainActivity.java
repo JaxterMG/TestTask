@@ -35,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Database db = new Database( MainActivity.this);
-
-
         DownloadFile downloadFile = new DownloadFile();
         downloadFile.execute();
         setContentView(R.layout.activity_main);
@@ -48,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     BroadcastReceiver onComplete=new BroadcastReceiver() {
         public void onReceive(Context ctxt, Intent intent) {
-
-
             Toast.makeText(MainActivity.this, "Downloaded", Toast.LENGTH_SHORT).show();
           ParseTextFile parse = new ParseTextFile();
 
@@ -85,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
     private  class ParseTextFile extends  AsyncTask<String, Void, String>
     {
 
+        protected  void  onPreExecute()
+        {
+            db = new Database(getApplicationContext());
+        }
+
         @Override
         protected String doInBackground(String... strings) {
 
@@ -112,17 +112,16 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //db = new Database(MainActivity.this);
             try {
 
                 JSONArray cities = null;
 
-            //cities = jsonObject.getJSONArray("city");
+            cities = jsonObject.getJSONArray("city");
 
 
 
-               // for (int i = 0; i<cities.length();i++)
-                //{
+               for (int i = 0; i<cities.length();i++)
+                {
                     String city = null;
                     String name = null;
                     double latitude = 0;
@@ -134,13 +133,13 @@ public class MainActivity extends AppCompatActivity {
                     String maps_url = null;
 
 
-/*
+
                     JSONObject object = cities.getJSONObject(i);
                     String cityName= object.getString("name");
                     JSONObject terminals = object.getJSONObject("terminals");
                     JSONArray terminal = terminals.getJSONArray("terminal");
 
-                    for (int j = 0;j<terminals.length(); j++)
+                    for (int j = 0;j<terminal.length(); j++)
                     {
                         JSONObject term = terminal.getJSONObject(j);
                         name = term.getString("name");
@@ -151,27 +150,12 @@ public class MainActivity extends AppCompatActivity {
                         defaultT = term.getBoolean("default");
                         //worktable = term.getString("worktable");
                         // maps_url = term.getString("maps");
-                       //db.InsertTerminal("cityName",name,latitude,longitude,recieveCargo,
-                         //       giveoutCargo,defaultT,"worktable","efefef");
+                       db.InsertTerminal(cityName,name,latitude,longitude,recieveCargo,
+                               giveoutCargo,defaultT,"worktable","efefef");
 
                     }
 
- */
-
-
-
-                    db.InsertTerminal("cityName","name",234234,23423,true,
-                            false,true,"worktable","efefef");
-
-
-
-
-                   // registerReceiver(onComplete, new IntentFilter());
-
-                  //  System.out.println(cityName);
-               // }
-
-
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

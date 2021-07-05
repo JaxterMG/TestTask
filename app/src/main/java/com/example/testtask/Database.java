@@ -46,7 +46,7 @@ class Database extends SQLiteOpenHelper
                                        boolean defaultT,
                                        String worktable, String maps_url)
     {
-      /*  SQLiteDatabase db = this.getWritableDatabase();
+       SQLiteDatabase db = this.getWritableDatabase();
         ContentValues terminalValues = new ContentValues();
         terminalValues.put("CITY", city);
         terminalValues.put("NAME", name);
@@ -59,7 +59,7 @@ class Database extends SQLiteOpenHelper
         terminalValues.put("MAPSURL", maps_url);
         db.insert("TERMINALS", null, terminalValues);
 
-       */
+
     }
 
     @Override
