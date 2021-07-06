@@ -4,7 +4,7 @@ public class WorkTable {
     String monday;
     String tuesday;
     String wednesday;
-    String thirsday;
+    String thursday;
     String friday;
     String saturday;
     String sunday;
@@ -37,12 +37,12 @@ public class WorkTable {
         this.wednesday = wednesday;
     }
 
-    public String getThirsday() {
-        return thirsday;
+    public String getThursday() {
+        return thursday;
     }
 
-    public void setThirsday(String thirsday) {
-        this.thirsday = thirsday;
+    public void setThursday(String thursday) {
+        this.thursday = thursday;
     }
 
     public String getFriday() {

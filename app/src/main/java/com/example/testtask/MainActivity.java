@@ -148,10 +148,12 @@ public class MainActivity extends AppCompatActivity {
                         recieveCargo = term.getBoolean("receiveCargo");
                         giveoutCargo = term.getBoolean("giveoutCargo");
                         defaultT = term.getBoolean("default");
-                        //worktable = term.getString("worktable");
+                        JSONObject worktableObject =  term.getJSONObject("worktables");
+                        JSONArray worktableArray = worktableObject.getJSONArray("worktable");
+                        worktable = MakeWorktable(worktableArray);
                         // maps_url = term.getString("maps");
                        db.InsertTerminal(cityName,name,latitude,longitude,recieveCargo,
-                               giveoutCargo,defaultT,"worktable","efefef");
+                               giveoutCargo,defaultT,worktable,"efefef");
 
                     }
 
@@ -165,6 +167,50 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+    }
+    String MakeWorktable(JSONArray worktableArray)
+    {
+        StringBuilder worktable = new StringBuilder();
+        String department;
+        String monday;
+        String tuesday;
+        String wednesday;
+        String thursday;
+        String friday;
+        String saturday;
+        String sunday;
+        String timetable;
+
+
+        for (int i = 0; i<worktableArray.length();i++)
+        {
+            try {
+                JSONObject worktableObj = worktableArray.getJSONObject(i);
+                department = worktableObj.getString("department");
+                monday = worktableObj.getString("monday");
+                tuesday = worktableObj.getString("tuesday");
+                wednesday = worktableObj.getString("wednesday");
+                thursday = worktableObj.getString("thursday");
+                friday = worktableObj.getString("friday");
+                saturday = worktableObj.getString("saturday");
+                sunday = worktableObj.getString("sunday");
+                timetable = worktableObj.getString("timetable");
+
+                worktable.append("department: "+ department +"\n"+
+                                 "monday: "+ monday +"\n"+
+                                 "tuesday: "+ tuesday +"\n"+
+                                 "wednesday: "+ wednesday +"\n"+
+                                 "thursday: "+ thursday +"\n"+
+                                 "friday: "+ friday +"\n"+
+                                 "saturday: "+ saturday +"\n"+
+                                 "sunday: "+ sunday +"\n"+
+                                 "timetable: "+ timetable+ "\n");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return worktable.toString();
     }
 }
 
