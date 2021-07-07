@@ -3,6 +3,7 @@ package com.example.testtask;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -48,7 +49,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                System.out.println("To");
+                Intent activityChangeIntent = new Intent(MainActivity.this, TerminalsScreen.class);
+
+                activityChangeIntent.putExtra("tabNum", 1);
+
+                MainActivity.this.startActivity(activityChangeIntent);
             }
         });
         btnFrom = (Button) findViewById(R.id.buttonFrom);
@@ -56,7 +61,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                System.out.println("From");
+                Intent activityChangeIntent = new Intent(MainActivity.this, TerminalsScreen.class);
+
+                activityChangeIntent.putExtra("tabNum", 0);
+                MainActivity.this.startActivity(activityChangeIntent);
             }
         });
 

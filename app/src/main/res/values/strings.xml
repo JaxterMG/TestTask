@@ -3,5 +3,10 @@
     <string name="Save">Save</string>
     <string name="From">From</string>
     <string name="To">To</string>
+
+    <string name="FromFragment">From</string>
+    <string name="ToFragment">To</string>
     <string name="URL">https://api.dellin.ru/static/catalog/terminals_v3.json</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
