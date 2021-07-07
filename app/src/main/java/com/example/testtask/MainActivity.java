@@ -13,7 +13,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
 import android.webkit.URLUtil;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,21 +27,49 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
 
     String title;
-    TextView tv;
     Database db = null;
+    Button btnTo;
+    Button btnFrom;
+    Button btnSave;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DownloadFile downloadFile = new DownloadFile();
         downloadFile.execute();
         setContentView(R.layout.activity_main);
-        tv = (TextView) findViewById(R.id.text_view_id);
+        btnTo = (Button) findViewById(R.id.buttonTo);
+        btnTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                System.out.println("To");
+            }
+        });
+        btnFrom = (Button) findViewById(R.id.buttonFrom);
+        btnFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                System.out.println("From");
+            }
+        });
+
+        btnSave = (Button) findViewById(R.id.buttonSave);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                System.out.println("Save");
+            }
+        });
     }
+
 
 
 
@@ -51,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
           parse.execute(title);
         }
     };
+
+
 
 
     private class DownloadFile extends AsyncTask<Void,Void,Void>
@@ -151,9 +183,40 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject worktableObject =  term.getJSONObject("worktables");
                         JSONArray worktableArray = worktableObject.getJSONArray("worktable");
                         worktable = MakeWorktable(worktableArray);
+                        JSONObject maps = term.getJSONObject("maps");
+                        JSONObject largeMap = new JSONObject();
+                        JSONObject mediumMap = new JSONObject();
+                        JSONObject miniMap = new JSONObject();
+                        if(maps.has("width")) {
+                            largeMap = maps.getJSONObject("width").getJSONObject("960").getJSONObject("height").getJSONObject("960");
+                            mediumMap = maps.getJSONObject("width").getJSONObject("640").getJSONObject("height").getJSONObject("640");
+                            miniMap = maps.getJSONObject("width").getJSONObject("944").getJSONObject("height").getJSONObject("352");
+                        }
+                        else
+                        {
+                            //TODO: Влепить заглушку для картинок
+                        }
+                        StringBuilder mapsUrls = new StringBuilder();
+                        if(largeMap.has("url"))
+                        {
+                            mapsUrls.append(largeMap.getString("url")).append("\n");
+                        }
+                        if(mediumMap.has("url")) {
+                            mapsUrls.append(mediumMap.getString("url")).append("\n");
+                        }
+                        if(miniMap.has("url"))
+                        {
+                            mapsUrls.append(miniMap.getString("url"));
+                        }
+
+
+
+
+
+
                         // maps_url = term.getString("maps");
                        db.InsertTerminal(cityName,name,latitude,longitude,recieveCargo,
-                               giveoutCargo,defaultT,worktable,"efefef");
+                               giveoutCargo,defaultT,worktable, mapsUrls.toString());
 
                     }
 
@@ -209,7 +272,9 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+
         }
+        worktable.deleteCharAt(worktable.length()-1);
         return worktable.toString();
     }
 }

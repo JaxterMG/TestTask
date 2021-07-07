@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">TestTask</string>
+    <string name="Save">Save</string>
+    <string name="From">From</string>
+    <string name="To">To</string>
     <string name="URL">https://api.dellin.ru/static/catalog/terminals_v3.json</string>
 </resources>
