@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.testtask.R;
 
@@ -25,6 +26,8 @@ public class ToFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    TextView tv;
 
     public ToFragment() {
         // Required empty public constructor
@@ -61,6 +64,7 @@ public class ToFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        
         return inflater.inflate(R.layout.fragment_to, container, false);
     }
 }
