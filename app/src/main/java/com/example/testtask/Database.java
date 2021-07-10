@@ -2,10 +2,14 @@ package com.example.testtask;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.LinkedList;
+import java.util.List;
 
 class Database extends SQLiteOpenHelper
 {
@@ -60,6 +64,32 @@ class Database extends SQLiteOpenHelper
         db.insert("TERMINALS", null, terminalValues);
 
 
+    }
+    public void GetGiveOutTerminalList()
+    {
+        List<TerminalCell> list = new LinkedList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from terminals", null,null);
+        cursor.moveToFirst();
+        for (int i = 0; i< cursor.getColumnCount();i++)
+        {
+           // TerminalCell cell = new TerminalCell(cursor.getString());
+           // list.add(cell);
+           // cursor.moveToNext();
+        }
+    }
+    public void GetReceiveTerminalList()
+    {
+        List<TerminalCell> list = new LinkedList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from terminals", null,null);
+        cursor.moveToFirst();
+        for (int i = 0; i< cursor.getColumnCount();i++)
+        {
+            // TerminalCell cell = new TerminalCell(cursor.getString());
+            // list.add(cell);
+            // cursor.moveToNext();
+        }
     }
 
     @Override

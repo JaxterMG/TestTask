@@ -14,10 +14,15 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.testtask.TerminalFragments.FragmentAdapter;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.List;
+
 public class TerminalsScreen extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 pager2;
     FragmentAdapter adapter;
+    List<TerminalCell> fromCells;
+    List<TerminalCell> toCells;
+    Database database;
     int tab = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,8 @@ public class TerminalsScreen extends AppCompatActivity {
 
         pager2.setCurrentItem(tab);
         tabLayout.selectTab(tabLayout.getTabAt(tab));
+        database = getIntent().getExtras().getParcelable("DataBase");
+
 
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

@@ -14,7 +14,11 @@ import android.widget.TextView;
 
 import com.example.testtask.MainActivity;
 import com.example.testtask.R;
+import com.example.testtask.TerminalCell;
 import com.example.testtask.TerminalsScreen;
+
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +39,7 @@ public class FromFragment extends Fragment implements  View.OnClickListener{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    List<TerminalCell> fromCells;
 
     public FromFragment() {
         // Required empty public constructor
