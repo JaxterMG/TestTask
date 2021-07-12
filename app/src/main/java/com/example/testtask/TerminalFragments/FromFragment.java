@@ -1,6 +1,7 @@
 package com.example.testtask.TerminalFragments;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.testtask.Database;
 import com.example.testtask.MainActivity;
 import com.example.testtask.R;
 import com.example.testtask.TerminalCell;
@@ -75,26 +77,45 @@ public class FromFragment extends Fragment implements  View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_from, container, false);
         layoutList = view.findViewById(R.id.layout_list);
-        add = view.findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                AddView();
-            }
-        });
+        fromCells = Database.Instance.GetReceiveList();
+        AddViews addViews = new AddViews();
+        addViews.execute();
+
         return view;
     }
 
+    private class AddViews extends AsyncTask<Void, Void, String> {
 
-    private void AddView()
-    {
+        protected void onPreExecute() {
+
+        }
+
+
+        @Override
+        protected String doInBackground(Void... voids)
+        {
+            for (int i = 0; i < fromCells.size(); i++)
+            {
+                AddView(i);
+            }
+            return  null;
+        }
+
+    }
+
+
+    private void AddView(int i) {
         View cellView = getLayoutInflater().inflate(R.layout.terminal_cell_layout, null, false);
-        System.out.println("Clicked");
+        TextView city = cellView.findViewById(R.id.City);
+        city.setText(fromCells.get(i).getCity());
+
+        System.out.println(fromCells.get(i).getCity());
         layoutList.addView(cellView);
     }
+
     private  void  DeleteView(View v)
     {
 
