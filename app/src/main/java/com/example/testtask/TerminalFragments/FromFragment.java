@@ -82,7 +82,10 @@ public class FromFragment extends Fragment implements  View.OnClickListener{
     private void AddView(int i) {
         View cellView = getLayoutInflater().inflate(R.layout.terminal_cell_layout, null, false);
         TextView city = cellView.findViewById(R.id.City);
+        TextView worktable = cellView.findViewById(R.id.worktable);
         city.setText(fromCells.get(i).getCity());
+        worktable.setText(fromCells.get(i).getWorktable());
+        LinearLayout layout = cellView.findViewById(R.id.layout_list);
         layoutList.addView(cellView);
     }
 

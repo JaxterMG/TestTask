@@ -2,10 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="100px">
+    android:paddingTop="100px"
+    android:focusable="true">
 
 
     <ImageView
@@ -16,18 +18,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_launcher_background"
         tools:ignore="VectorDrawableCompat"
+        android:clickable ="false"
         tools:layout_editor_absoluteY="16dp" />
 
     <TextView
         android:id="@+id/City"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable ="false"
         android:text="Город" />
 
     <TextView
         android:id="@+id/worktable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable ="false"
         android:text="Расписание" />
 
 </LinearLayout>

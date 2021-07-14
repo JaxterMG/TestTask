@@ -70,7 +70,9 @@ public class ToFragment extends Fragment {
     private void AddView(int i) {
         View cellView = getLayoutInflater().inflate(R.layout.terminal_cell_layout, null, false);
         TextView city = cellView.findViewById(R.id.City);
+        TextView worktable = cellView.findViewById(R.id.worktable);
         city.setText(toCells.get(i).getCity());
+        worktable.setText(toCells.get(i).getWorktable());
         layoutList.addView(cellView);
     }
 

@@ -8,6 +8,7 @@ public class TerminalCell {
     boolean defaultT;
     String city;
     String name;
+    String worktableStr;
     WorkTable worktable;
     Map maps_url;
 
@@ -24,7 +25,7 @@ public class TerminalCell {
         this.receiveCargo = receiveCargo;
         this.giveoutCargo = giveoutCargo;
         this.defaultT = defaultT;
-        worktable = MakeWorkTable(worktableStr);
+        this.worktableStr = worktableStr;
         maps_url = MakeMap(maps_urlStr);
     }
 
@@ -43,6 +44,7 @@ public class TerminalCell {
     public double getLatitude() {
         return latitude;
     }
+
 
     public double getLongitude() {
         return longitude;
@@ -63,4 +65,6 @@ public class TerminalCell {
     public String getName() {
         return name;
     }
+
+    public String getWorktable() { return worktableStr; }
 }
