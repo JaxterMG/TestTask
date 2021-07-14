@@ -19,7 +19,6 @@ public class FragmentAdapter  extends FragmentStateAdapter {
         {
             case 1:
                 return new ToFragment();
-
         }
         return new FromFragment();
     }

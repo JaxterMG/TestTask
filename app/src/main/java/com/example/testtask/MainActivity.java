@@ -1,26 +1,19 @@
 package com.example.testtask;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.util.Iterator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnTo;
     Button btnFrom;
     Button btnSave;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +44,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 Intent activityChangeIntent = new Intent(MainActivity.this, TerminalsScreen.class);
-
                 activityChangeIntent.putExtra("tabNum", 1);
-
                 MainActivity.this.startActivity(activityChangeIntent);
             }
         });
+
         btnFrom = (Button) findViewById(R.id.buttonFrom);
         btnFrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,24 +71,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
-
-    BroadcastReceiver onComplete=new BroadcastReceiver() {
-        public void onReceive(Context ctxt, Intent intent) {
-            Toast.makeText(MainActivity.this, "Downloaded", Toast.LENGTH_SHORT).show();
-          ParseTextFile parse = new ParseTextFile();
-
-          parse.execute(title);
-        }
-    };
-
-
-
-
     private class DownloadFile extends AsyncTask<Void,Void,Void>
     {
-
         @Override
         protected Void doInBackground(Void... voids) {
             String url = getString(R.string.URL);
@@ -111,19 +86,23 @@ public class MainActivity extends AppCompatActivity {
 
             DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
             downloadManager.enqueue(request);
-
-            //Toast.makeText(MainActivity.this, "DownloadingStarted", Toast.LENGTH_SHORT).show();
             registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
             return null;
         }
     }
 
-    private  class ParseTextFile extends  AsyncTask<String, Void, String>
-    {
+    BroadcastReceiver onComplete=new BroadcastReceiver() {
+        public void onReceive(Context ctxt, Intent intent) {
+            Toast.makeText(MainActivity.this, "Downloaded", Toast.LENGTH_SHORT).show();
+            SaveFileToDatabase parse = new SaveFileToDatabase();
+            parse.execute(title);
+        }
+    };
 
-        protected  void  onPreExecute()
-        {
+    private class SaveFileToDatabase extends AsyncTask<String, Void, String> {
+
+        protected void onPreExecute() {
             db = new Database(getApplicationContext());
             db.ChangeInstance(db);
         }
@@ -156,13 +135,8 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             try {
-
                 JSONArray cities = null;
-
             cities = jsonObject.getJSONArray("city");
-
-
-
                for (int i = 0; i<cities.length();i++)
                 {
                     String city = null;
@@ -174,16 +148,12 @@ public class MainActivity extends AppCompatActivity {
                     boolean defaultT = false;
                     String worktable = null;
                     String maps_url = null;
-
-
-
-                    JSONObject object = cities.getJSONObject(i);
-                    String cityName= object.getString("name");
-                    JSONObject terminals = object.getJSONObject("terminals");
+                    JSONObject cityObj = cities.getJSONObject(i);
+                    String cityName = cityObj.getString("name");
+                    JSONObject terminals = cityObj.getJSONObject("terminals");
                     JSONArray terminal = terminals.getJSONArray("terminal");
 
-                    for (int j = 0;j<terminal.length(); j++)
-                    {
+                    for (int j = 0; j < terminal.length(); j++) {
                         JSONObject term = terminal.getJSONObject(j);
                         name = term.getString("name");
                         latitude = term.getDouble("latitude");
@@ -191,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                         recieveCargo = term.getBoolean("receiveCargo");
                         giveoutCargo = term.getBoolean("giveoutCargo");
                         defaultT = term.getBoolean("default");
-                        JSONObject worktableObject =  term.getJSONObject("worktables");
+                        JSONObject worktableObject = term.getJSONObject("worktables");
                         JSONArray worktableArray = worktableObject.getJSONArray("worktable");
                         worktable = MakeWorktable(worktableArray);
                         JSONObject maps = term.getJSONObject("maps");
@@ -220,15 +190,8 @@ public class MainActivity extends AppCompatActivity {
                             mapsUrls.append(miniMap.getString("url"));
                         }
 
-
-
-
-
-
-                        // maps_url = term.getString("maps");
                        db.InsertTerminal(cityName,name,latitude,longitude,recieveCargo,
                                giveoutCargo,defaultT,worktable, mapsUrls.toString());
-
                     }
 
                 }
@@ -236,12 +199,9 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return null;
-
-
-
-
         }
     }
+
     String MakeWorktable(JSONArray worktableArray)
     {
         StringBuilder worktable = new StringBuilder();
@@ -254,8 +214,6 @@ public class MainActivity extends AppCompatActivity {
         String saturday;
         String sunday;
         String timetable;
-
-
         for (int i = 0; i<worktableArray.length();i++)
         {
             try {
@@ -269,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
                 saturday = worktableObj.getString("saturday");
                 sunday = worktableObj.getString("sunday");
                 timetable = worktableObj.getString("timetable");
-
                 worktable.append("department: "+ department +"\n"+
                                  "monday: "+ monday +"\n"+
                                  "tuesday: "+ tuesday +"\n"+
@@ -282,8 +239,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
         }
         worktable.deleteCharAt(worktable.length()-1);
         return worktable.toString();

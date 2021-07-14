@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.icu.text.SymbolTable;
 import android.os.AsyncTask;
 
 import androidx.annotation.Nullable;
@@ -12,28 +13,22 @@ import androidx.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Database extends SQLiteOpenHelper
-{
-    public  static Database Instance;
-    private  Context context;
+public class Database extends SQLiteOpenHelper {
+    public static Database Instance;
+    List<TerminalCell> giveList = new LinkedList<>();
     private static final String DB_NAME = "TestTaskDB";
     private static final int DB_VERSION = 1;
-    List<TerminalCell>giveList = new LinkedList<>();
-    List<TerminalCell>receiveList = new LinkedList<>();
+    List<TerminalCell> receiveList = new LinkedList<>();
+    private final Context context;
 
-
-    public Database (@Nullable Context context)
-    {
+    public Database(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         this.context = context;
-
     }
 
-    public  void ChangeInstance(Database db)
-    {
+    public void ChangeInstance(Database db) {
         Instance = db;
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase)
@@ -49,10 +44,6 @@ public class Database extends SQLiteOpenHelper
                 + "DEFAULTT BOOLEAN,"
                 + "WORKTABLE TEXT,"
                 + "MAPSURL TEXT);");
-
-
-
-
     }
 
     public void InsertTerminal(String city ,String name,
@@ -73,8 +64,6 @@ public class Database extends SQLiteOpenHelper
         terminalValues.put("WORKTABLE", worktable);
         terminalValues.put("MAPSURL", maps_url);
         db.insert("TERMINALS", null, terminalValues);
-
-
     }
 
     public  List<TerminalCell> GetReceiveList()
@@ -83,7 +72,7 @@ public class Database extends SQLiteOpenHelper
     }
     public  List<TerminalCell> GetGiveOutList()
     {
-        return  giveList;
+        return giveList;
     }
 
     public  void TerminalsRequest()
@@ -94,20 +83,19 @@ public class Database extends SQLiteOpenHelper
 
     private class GetTerminalList extends AsyncTask<Void, Void, String>
     {
-
         protected void onPreExecute() {
 
         }
-
 
         @Override
         protected String doInBackground(Void... voids) {
             int receives = 0;
             int giveOuts = 0;
             SQLiteDatabase db = Instance.getReadableDatabase();
-            Cursor cursor = db.rawQuery("select * from terminals", null, null);
+            Cursor cursor = db.rawQuery("select * from TERMINALS", null, null);
             cursor.moveToFirst();
-            for (int i = 0; i < cursor.getColumnCount(); i++) {
+            System.out.println(cursor.getCount());
+            for (int i = 0; i < cursor.getCount(); i++) {
                 double latitude = cursor.getDouble(cursor.getColumnIndex("LONGITUDE"));
                 double longitude = cursor.getDouble(cursor.getColumnIndex("LATITUDE"));
                 boolean receiveCargo = cursor.getInt(cursor.getColumnIndex("RECEIVECARGO")) > 0;
@@ -117,8 +105,6 @@ public class Database extends SQLiteOpenHelper
                 String name = cursor.getString(cursor.getColumnIndex("NAME"));
                 String worktable = cursor.getString(cursor.getColumnIndex("WORKTABLE"));
                 String maps_url = cursor.getString(cursor.getColumnIndex("MAPSURL"));
-                System.out.println(city);
-
                 TerminalCell cell = new TerminalCell(city, name, latitude, longitude, receiveCargo, giveoutCargo, defaultT, worktable, maps_url);
                 if (receiveCargo) {
                     receives++;
@@ -130,12 +116,9 @@ public class Database extends SQLiteOpenHelper
                 }
                 cursor.moveToNext();
             }
-            System.out.println("Recieves " + receives);
             return null;
         }
     }
-
-
 
         @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1)

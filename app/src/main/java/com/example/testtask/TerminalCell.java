@@ -17,13 +17,13 @@ public class TerminalCell {
                         boolean defaultT,
                         String worktableStr, String maps_urlStr)
     {
-        city = this.city;
-        name = this.name;
-        latitude = this.latitude;
-        longitude = this.longitude;
-        receiveCargo = this.receiveCargo;
-        giveoutCargo = this.giveoutCargo;
-        defaultT = this.defaultT;
+        this.city = city;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.receiveCargo = receiveCargo;
+        this.giveoutCargo = giveoutCargo;
+        this.defaultT = defaultT;
         worktable = MakeWorkTable(worktableStr);
         maps_url = MakeMap(maps_urlStr);
     }
@@ -33,12 +33,12 @@ public class TerminalCell {
         Map newMap = new Map(mapsData);
         return newMap;
     }
+
     public WorkTable MakeWorkTable(String worktableData)
     {
         WorkTable newTable = new WorkTable(worktableData);
         return newTable;
     }
-
 
     public double getLatitude() {
         return latitude;
